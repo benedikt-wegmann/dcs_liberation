@@ -9,6 +9,7 @@ from game import persistency
 global __dcs_saved_game_directory
 global __dcs_installation_directory
 global __last_save_file
+global __cheats_enabled
 
 PREFERENCES_FILE_PATH = "liberation_preferences.json"
 
@@ -17,6 +18,7 @@ def init():
     global __dcs_saved_game_directory
     global __dcs_installation_directory
     global __last_save_file
+    global __cheats_enabled
 
     if os.path.isfile(PREFERENCES_FILE_PATH):
         try:
@@ -24,6 +26,10 @@ def init():
                 pref_data = json.loads(prefs.read())
                 __dcs_saved_game_directory = pref_data["saved_game_dir"]
                 __dcs_installation_directory = pref_data["dcs_install_dir"]
+                if "cheats_enabled" in pref_data:
+                    __cheats_enabled = pref_data["cheats_enabled"]
+                else:
+                    __cheats_enabled = True
                 if "last_save_file" in pref_data:
                     __last_save_file = pref_data["last_save_file"]
                 else:
@@ -33,6 +39,7 @@ def init():
             __dcs_saved_game_directory = ""
             __dcs_installation_directory = ""
             __last_save_file = ""
+            __cheats_enabled = True
             is_first_start = True
     else:
         __last_save_file = ""
@@ -48,15 +55,18 @@ def init():
             __dcs_installation_directory = ""
 
         is_first_start = True
+        __cheats_enabled = True
     persistency.setup(__dcs_saved_game_directory)
     return is_first_start
 
 
-def setup(saved_game_dir, install_dir):
+def setup(saved_game_dir, install_dir, cheats_enabled):
     global __dcs_saved_game_directory
     global __dcs_installation_directory
+    global __cheats_enabled
     __dcs_saved_game_directory = saved_game_dir
     __dcs_installation_directory = install_dir
+    __cheats_enabled = cheats_enabled
     persistency.setup(__dcs_saved_game_directory)
 
 
@@ -69,9 +79,11 @@ def save_config():
     global __dcs_saved_game_directory
     global __dcs_installation_directory
     global __last_save_file
+    global __cheats_enabled
     pref_data = {"saved_game_dir": __dcs_saved_game_directory,
                  "dcs_install_dir": __dcs_installation_directory,
-                 "last_save_file": __last_save_file}
+                 "last_save_file": __last_save_file,
+                 "cheats_enabled": __cheats_enabled}
     with(open(PREFERENCES_FILE_PATH, "w")) as prefs:
         prefs.write(json.dumps(pref_data))
 
@@ -93,6 +105,11 @@ def get_last_save_file():
         return __last_save_file
     else:
         return None
+
+
+def get_cheats_enabled():
+    global __cheats_enabled
+    return __cheats_enabled
 
 
 def replace_mission_scripting_file():

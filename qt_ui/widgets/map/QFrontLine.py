@@ -18,6 +18,7 @@ from qt_ui.dialogs import Dialog
 from qt_ui.models import GameModel
 from qt_ui.windows.GameUpdateSignal import GameUpdateSignal
 from qt_ui.windows.mission.QPackageDialog import QNewPackageDialog
+from qt_ui import liberation_install
 
 
 class QFrontLine(QGraphicsLineItem):
@@ -58,13 +59,15 @@ class QFrontLine(QGraphicsLineItem):
         new_package_action.triggered.connect(self.open_new_package_dialog)
         menu.addAction(new_package_action)
 
-        cheat_forward = QAction(f"CHEAT: Advance Frontline")
-        cheat_forward.triggered.connect(self.cheat_forward)
-        menu.addAction(cheat_forward)
+        self.cheats_enabled = liberation_install.get_cheats_enabled()
+        if self.cheats_enabled:
+            cheat_forward = QAction(f"CHEAT: Advance Frontline")
+            cheat_forward.triggered.connect(self.cheat_forward)
+            menu.addAction(cheat_forward)
 
-        cheat_backward = QAction(f"CHEAT: Retreat Frontline")
-        cheat_backward.triggered.connect(self.cheat_backward)
-        menu.addAction(cheat_backward)
+            cheat_backward = QAction(f"CHEAT: Retreat Frontline")
+            cheat_backward.triggered.connect(self.cheat_backward)
+            menu.addAction(cheat_backward)
 
         menu.exec_(event.screenPos())
 

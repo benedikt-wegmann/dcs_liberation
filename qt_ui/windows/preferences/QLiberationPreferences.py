@@ -11,6 +11,7 @@ from PySide2.QtWidgets import (
     QMessageBox,
     QPushButton,
     QVBoxLayout,
+    QCheckBox,
 )
 
 from qt_ui import liberation_install, liberation_theme
@@ -23,9 +24,11 @@ class QLiberationPreferences(QFrame):
         super(QLiberationPreferences, self).__init__()
         self.saved_game_dir = ""
         self.dcs_install_dir = ""
+        self.cheats_enabled = True
 
         self.dcs_install_dir = liberation_install.get_dcs_install_directory()
         self.saved_game_dir = liberation_install.get_saved_game_dir()
+        self.cheats_enabled = liberation_install.get_cheats_enabled()
 
         self.edit_dcs_install_dir = QLineEdit(self.dcs_install_dir)
         self.edit_saved_game_dir = QLineEdit(self.saved_game_dir)
@@ -39,6 +42,9 @@ class QLiberationPreferences(QFrame):
         self.browse_install_dir.clicked.connect(self.on_browse_installation_dir)
         self.themeSelect = QComboBox()
         [self.themeSelect.addItem(y['themeName']) for x, y in THEMES.items()]
+
+        self.enable_cheat_options = QCheckBox("Enable cheat options")
+        self.enable_cheat_options.setChecked(self.cheats_enabled)
 
         self.initUi()
 
@@ -54,6 +60,9 @@ class QLiberationPreferences(QFrame):
         layout.addWidget(QLabel("<strong>Theme (Requires Restart)</strong>"), 4, 0)
         layout.addWidget(self.themeSelect, 4, 1, alignment=Qt.AlignRight)
         self.themeSelect.setCurrentIndex(get_theme_index())
+
+        layout.addWidget(QLabel("<strong>Cheats</strong>"), 5, 0)
+        layout.addWidget(self.enable_cheat_options,6,0,alignment=Qt.AlignLeft)
 
         main_layout.addLayout(layout)
         main_layout.addStretch()
@@ -79,6 +88,8 @@ class QLiberationPreferences(QFrame):
         self.dcs_install_dir = self.edit_dcs_install_dir.text()
         set_theme_index(self.themeSelect.currentIndex())
 
+        self.cheats_enabled = self.enable_cheat_options.isChecked()
+
         if not os.path.isdir(self.saved_game_dir):
             error_dialog = QMessageBox.critical(self, "Wrong DCS Saved Games directory.",
                                                 self.saved_game_dir + " is not a valid directory",
@@ -101,7 +112,7 @@ class QLiberationPreferences(QFrame):
             error_dialog.exec_()
             return False
 
-        liberation_install.setup(self.saved_game_dir, self.dcs_install_dir)
+        liberation_install.setup(self.saved_game_dir, self.dcs_install_dir, self.cheats_enabled)
         liberation_install.save_config()
         liberation_theme.save_theme_config()
         return True

@@ -28,6 +28,7 @@ from qt_ui.widgets.spinsliders import TenthsSpinSlider
 from qt_ui.windows.GameUpdateSignal import GameUpdateSignal
 from qt_ui.windows.finances.QFinancesMenu import QHorizontalSeparationLine
 from qt_ui.windows.settings.plugins import PluginOptionsPage, PluginsPage
+from qt_ui import liberation_install
 
 
 class CheatSettingsBox(QGroupBox):
@@ -100,13 +101,15 @@ class QSettingsWindow(QDialog):
         self.categoryModel.appendRow(generator)
         self.right_layout.addWidget(self.generatorPage)
 
-        self.initCheatLayout()
-        cheat = QStandardItem("Cheat Menu")
-        cheat.setIcon(CONST.ICONS["Cheat"])
-        cheat.setEditable(False)
-        cheat.setSelectable(True)
-        self.categoryModel.appendRow(cheat)
-        self.right_layout.addWidget(self.cheatPage)
+        self.cheats_enabled = liberation_install.get_cheats_enabled()
+        if self.cheats_enabled:
+            self.initCheatLayout()
+            cheat = QStandardItem("Cheat Menu")
+            cheat.setIcon(CONST.ICONS["Cheat"])
+            cheat.setEditable(False)
+            cheat.setSelectable(True)
+            self.categoryModel.appendRow(cheat)
+            self.right_layout.addWidget(self.cheatPage)
 
         self.pluginsPage = PluginsPage()
         plugins = QStandardItem("LUA Plugins")
