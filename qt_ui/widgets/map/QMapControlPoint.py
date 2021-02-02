@@ -10,6 +10,7 @@ from qt_ui.windows.basemenu.QBaseMenu2 import QBaseMenu2
 from .QMapObject import QMapObject
 from ...displayoptions import DisplayOptions
 from ...windows.GameUpdateSignal import GameUpdateSignal
+from qt_ui import liberation_install
 
 
 class QMapControlPoint(QMapObject):
@@ -90,7 +91,9 @@ class QMapControlPoint(QMapObject):
 
         for connected in self.control_point.connected_points:
             if connected.captured:
-                menu.addAction(self.capture_action)
+                self.cheats_enabled = liberation_install.get_cheats_enabled()
+                if self.cheats_enabled:
+                    menu.addAction(self.capture_action)
                 break
 
     def cheat_capture(self) -> None:
