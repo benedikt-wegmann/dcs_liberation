@@ -154,8 +154,10 @@ class WaypointBuilder:
             FlightWaypointType.JOIN,
             position.x,
             position.y,
-            500 if self.is_helo else self.doctrine.ingress_altitude
+            80 if self.is_helo else self.doctrine.ingress_altitude
         )
+        if self.is_helo:
+            waypoint.alt_type = "RADIO"
         waypoint.pretty_name = "Join"
         waypoint.description = "Rendezvous with package"
         waypoint.name = "JOIN"
@@ -166,8 +168,10 @@ class WaypointBuilder:
             FlightWaypointType.SPLIT,
             position.x,
             position.y,
-            500 if self.is_helo else self.doctrine.ingress_altitude
+            80 if self.is_helo else self.doctrine.ingress_altitude
         )
+        if self.is_helo:
+            waypoint.alt_type = "RADIO"
         waypoint.pretty_name = "Split"
         waypoint.description = "Depart from package"
         waypoint.name = "SPLIT"
@@ -179,8 +183,10 @@ class WaypointBuilder:
             ingress_type,
             position.x,
             position.y,
-            500 if self.is_helo else self.doctrine.ingress_altitude
+            50 if self.is_helo else self.doctrine.ingress_altitude
         )
+        if self.is_helo:
+            waypoint.alt_type = "RADIO"
         waypoint.pretty_name = "INGRESS on " + objective.name
         waypoint.description = "INGRESS on " + objective.name
         waypoint.name = "INGRESS"
@@ -193,8 +199,10 @@ class WaypointBuilder:
             FlightWaypointType.EGRESS,
             position.x,
             position.y,
-            500 if self.is_helo else self.doctrine.ingress_altitude
+            50 if self.is_helo else self.doctrine.ingress_altitude
         )
+        if self.is_helo:
+            waypoint.alt_type = "RADIO"
         waypoint.pretty_name = "EGRESS from " + target.name
         waypoint.description = "EGRESS from " + target.name
         waypoint.name = "EGRESS"
@@ -274,7 +282,7 @@ class WaypointBuilder:
             FlightWaypointType.CAS,
             position.x,
             position.y,
-            500 if self.is_helo else 1000
+            50 if self.is_helo else 1000
         )
         waypoint.alt_type = "RADIO"
         waypoint.description = "Provide CAS"
@@ -404,8 +412,10 @@ class WaypointBuilder:
             FlightWaypointType.TARGET_GROUP_LOC,
             target.position.x,
             target.position.y,
-            500 if self.is_helo else self.doctrine.ingress_altitude
+            50 if self.is_helo else self.doctrine.ingress_altitude
         )
+        if self.is_helo:
+            waypoint.alt_type = "RADIO"
         waypoint.name = "TARGET"
         waypoint.description = "Escort the package"
         waypoint.pretty_name = "Target area"
